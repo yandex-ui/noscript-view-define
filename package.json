@@ -1,0 +1,34 @@
+{
+  "name": "noscript-view-edefine",
+  "version": "0.0.1",
+  "description": "Плагин для noscript, улучшающий наследование View",
+  "scripts": {
+    "test": "make && ./node_modules/karma/bin/karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/doochik/noscript-view-edefine.git"
+  },
+  "keywords": [
+    "noscript",
+    "yate"
+  ],
+  "author": "Aleksei Androsov <doochik@ya.ru>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doochik/noscript-view-edefine/issues"
+  },
+  "homepage": "https://github.com/doochik/noscript-view-edefine",
+  "files": [
+    "ns-view-edefine.js"
+  ],
+  "devDependencies": {
+    "noscript": "git://github.com/doochik/noscript.git#master",
+    "karma": "0.12.x",
+    "karma-borschik-preprocessor": "~0.1.2",
+    "karma-mocha": "^0.1.3",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma-sinon-chai": "0.1.x",
+    "mocha": "^1.18.2"
+  }
+}
