@@ -17,7 +17,7 @@ module.exports = function(config) {
     files: [
       "http://yastatic.net/jquery/1.11.0/jquery.min.js",
 
-      'node_modules/noscript/noscript.borschik.js',
+      'node_modules/noscript/dist/noscript.js',
 
       'ns.view.edefine.js',
 
@@ -31,14 +31,6 @@ module.exports = function(config) {
     exclude: [
       
     ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-        'node_modules/noscript/noscript.borschik.js': ['borschik']
-    },
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
