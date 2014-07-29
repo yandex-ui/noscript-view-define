@@ -1,11 +1,4 @@
 (function() {
-    ns.View._ns_initInfoEvents = ns.View._initInfoEvents;
-    ns.View._initInfoEvents = function(info) {
-        var events = info.events;
-        ns.View._ns_initInfoEvents(info);
-        info.events = events;
-    };
-
     /**
      * Хелпер для наследования событийных привязок и методов
      * @param info Объект-информация о сущности
