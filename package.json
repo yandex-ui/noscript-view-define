@@ -30,6 +30,7 @@
     "karma-mocha": "^0.1.3",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-sinon-chai": "0.1.x",
-    "mocha": "^1.18.2"
+    "mocha": "^1.18.2",
+    "noscript": "git://github.com/yandex-ui/noscript.git#d1f79fffe9bcc3dd6b88caec2379141e7aba4335"
   }
 }
