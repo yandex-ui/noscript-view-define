@@ -1,6 +1,6 @@
 {
   "name": "noscript-view-edefine",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Плагин для noscript, улучшающий наследование View",
   "scripts": {
     "test": "make && ./node_modules/karma/bin/karma start"
