@@ -23,7 +23,7 @@
     "ns.view.edefine.js"
   ],
   "peerDependencies": {
-    "noscript": ">=0.4"
+    "noscript": ">=0.4.3"
   },
   "devDependencies": {
     "karma": "0.12.x",
@@ -31,6 +31,6 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-sinon-chai": "0.1.x",
     "mocha": "^1.18.2",
-    "noscript": "git://github.com/yandex-ui/noscript.git#d1f79fffe9bcc3dd6b88caec2379141e7aba4335"
+    "noscript": ">=0.4.3"
   }
 }
