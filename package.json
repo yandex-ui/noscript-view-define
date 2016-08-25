@@ -2,12 +2,12 @@
   "name": "noscript-view-edefine",
   "version": "0.0.3",
   "description": "Плагин для noscript, улучшающий наследование View",
-  "scripts": {
-    "test": "make && ./node_modules/karma/bin/karma start"
-  },
+  "keywords": [
+    "noscript"
+  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/doochik/noscript-view-edefine.git"
+    "url": "git://github.com/yandex-ui/noscript-view-edefine.git"
   },
   "keywords": [
     "noscript",
@@ -16,21 +16,36 @@
   "author": "Aleksei Androsov <doochik@ya.ru>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/doochik/noscript-view-edefine/issues"
+    "url": "https://github.com/yandex-ui/noscript-view-edefine/issues"
   },
-  "homepage": "https://github.com/doochik/noscript-view-edefine",
-  "files": [
-    "ns.view.edefine.js"
-  ],
-  "peerDependencies": {
-    "noscript": ">=0.4.3"
-  },
+  "homepage": "https://github.com/yandex-ui/noscript-view-edefine",
+  "main": "dist/edefine.js",
   "devDependencies": {
+    "babel": "6.5.2",
+    "babel-cli": "6.11.4",
+    "babel-eslint": "6.1.2",
+    "babel-loader": "6.2.4",
+    "babel-preset-es2015": "6.13.2",
+    "babel-preset-stage-0": "6.5.0",
+    "babel-register": "6.11.6",
+    "eslint": "3.3.0",
+    "eslint-config-yandex": "1.0.6",
+    "eslint-loader": "1.5.0",
     "karma": "0.12.x",
     "karma-mocha": "^0.1.3",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-sinon-chai": "0.1.x",
+    "lodash": "4.15.0",
     "mocha": "^1.18.2",
-    "noscript": ">=0.4.3"
+    "noscript": ">=0.4.3",
+    "webpack": "1.13.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "prod": "./node_modules/.bin/webpack --progress",
+    "dev": "./node_modules/.bin/webpack --progress --watch",
+    "test": "./node_modules/karma/bin/karma start"
   }
 }
