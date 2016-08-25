@@ -24,9 +24,9 @@ function mergeCustomizer(objValue, srcValue, key) {
     }
 
     if (key === 'ctor') {
-        return function () {
-            objValue && objValue.call(this);
-            srcValue && srcValue.call(this);
+        return function (...args) {
+            objValue && objValue.apply(this, args);
+            srcValue && srcValue.apply(this, args);
         };
     }
 }

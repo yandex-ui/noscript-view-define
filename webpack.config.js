@@ -15,18 +15,18 @@ var params = {
     'context': srcPath,
     'output': {
         'filename': '[name].js',
-        'library': '[name]',
-        'libraryTarget': 'umd',
         'path': distPath
     },
     'externals': {
         'ns': {
+            'var': 'ns',
             'root': 'ns',
             'commonjs2': 'ns',
             'commonjs': 'ns',
             'amd': 'ns'
         },
         'lodash': {
+            'var': '_',
             'root': '_',
             'commonjs2': 'lodash',
             'commonjs': 'lodash',

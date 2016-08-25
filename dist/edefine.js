@@ -1,14 +1,4 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("ns"), require("lodash"));
-	else if(typeof define === 'function' && define.amd)
-		define(["ns", "lodash"], factory);
-	else if(typeof exports === 'object')
-		exports["edefine"] = factory(require("ns"), require("lodash"));
-	else
-		root["edefine"] = factory(root["ns"], root["_"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
-return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -87,8 +77,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (key === 'ctor') {
 	        return function () {
-	            objValue && objValue.call(this);
-	            srcValue && srcValue.call(this);
+	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	                args[_key2] = arguments[_key2];
+	            }
+
+	            objValue && objValue.apply(this, args);
+	            srcValue && srcValue.apply(this, args);
 	        };
 	    }
 	}
@@ -113,8 +107,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	[ns.View, ns.ViewCollection].forEach(function (classExtend) {
 	    classExtend.edefine = function (id, info) {
-	        for (var _len2 = arguments.length, mixins = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-	            mixins[_key2 - 2] = arguments[_key2];
+	        for (var _len3 = arguments.length, mixins = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+	            mixins[_key3 - 2] = arguments[_key3];
 	        }
 
 	        return classExtend.define(id, inheritInfo(info, mixins), _.last(mixins));
@@ -125,15 +119,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+	module.exports = ns;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+	module.exports = _;
 
 /***/ }
-/******/ ])
-});
-;
+/******/ ]);
