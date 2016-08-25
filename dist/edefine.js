@@ -59,6 +59,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ns = __webpack_require__(1);
 	var _ = __webpack_require__(2);
 
+	var PATH_EXTENDS = ['ctor', 'events', 'methods'];
+	var PATH_PARENT_EXTENDS = ['ctor', 'events'];
 	var spreadMergeWith = _.spread(_.mergeWith);
 
 	function wrapperEvents(srcFunc, objFunc) {
@@ -83,36 +85,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _.mergeWith(objValue, srcValue, eventsCustomizer);
 	    }
 
-	    return objValue;
+	    if (key === 'ctor') {
+	        return function () {
+	            objValue && objValue.call(this);
+	            srcValue && srcValue.call(this);
+	        };
+	    }
+	}
+
+	function viewInfo(info) {
+	    return _.isString(info) && ns.View.info(info) || info;
 	}
 
 	/**
 	 * Хелпер для наследования событийных привязок и методов
-	 * @param info Объект-информация о сущности
-	 * @param params Массив имен предков
+	 * @param {Object} child Объект-информация о сущности
+	 * @param {array} mixins Массив имен предков
 	 * @returns {Object} Модифицированный объект-информация
 	 */
-	function inheritInfo(info, mixins) {
-	    info = _(info).chain().get('mixins', []).concat(mixins).filter(_.isString).map(function (mixin) {
-	        return ns.View.info(mixin);
-	    }).push(mergeCustomizer).tap(spreadMergeWith).value();
+	function inheritInfo(child, mixins) {
+	    var parent = viewInfo(mixins.pop());
 
-	    /*
-	        params.forEach(function (base) {
-	            if (typeof base === 'string') {
-	                var baseInfo = ns.View.info(base);
-	                info.events = extend({}, baseInfo.events, info.events);
-	            }
-	        });
-	    
-	        params.slice(0, params.length - 1).forEach(function (base) {
-	            if (typeof base === 'string') {
-	                var baseInfo = ns.View.info(base);
-	                info.methods = extend({}, baseInfo.methods, info.methods);
-	            }
-	        });
-	    */
-	    return info;
+	    return _(child).chain().get('mixins', []).concat(_.get(parent, 'mixins', [])).concat(mixins).unshift({}, child).map(function (mixin) {
+	        return _.pick(viewInfo(mixin), PATH_EXTENDS);
+	    }).push(mergeCustomizer).thru(spreadMergeWith).mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), mergeCustomizer).defaults(child).value();
 	}
 
 	[ns.View, ns.ViewCollection].forEach(function (classExtend) {

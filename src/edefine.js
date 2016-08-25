@@ -1,6 +1,8 @@
 const ns = require('ns');
 const _ = require('lodash');
 
+const PATH_EXTENDS = [ 'ctor', 'events', 'methods' ];
+const PATH_PARENT_EXTENDS = [ 'ctor', 'events' ];
 const spreadMergeWith = _.spread(_.mergeWith);
 
 function wrapperEvents(srcFunc, objFunc, ...args) {
@@ -21,42 +23,39 @@ function mergeCustomizer(objValue, srcValue, key) {
         return _.mergeWith(objValue, srcValue, eventsCustomizer);
     }
 
-    return objValue;
+    if (key === 'ctor') {
+        return function () {
+            objValue && objValue.call(this);
+            srcValue && srcValue.call(this);
+        };
+    }
+}
+
+function viewInfo(info) {
+    return _.isString(info) && ns.View.info(info) || info;
 }
 
 /**
  * Хелпер для наследования событийных привязок и методов
- * @param info Объект-информация о сущности
- * @param params Массив имен предков
+ * @param {Object} child Объект-информация о сущности
+ * @param {array} mixins Массив имен предков
  * @returns {Object} Модифицированный объект-информация
  */
-function inheritInfo(info, mixins) {
-    info = _(info)
+function inheritInfo(child, mixins) {
+    const parent = viewInfo(mixins.pop());
+
+    return _(child)
         .chain()
         .get('mixins', [])
+        .concat(_.get(parent, 'mixins', []))
         .concat(mixins)
-        .filter(_.isString)
-        .map(mixin => ns.View.info(mixin))
+        .unshift({}, child)
+        .map(mixin => _.pick(viewInfo(mixin), PATH_EXTENDS))
         .push(mergeCustomizer)
-        .tap(spreadMergeWith)
+        .thru(spreadMergeWith)
+        .mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), mergeCustomizer)
+        .defaults(child)
         .value();
-
-/*
-    params.forEach(function (base) {
-        if (typeof base === 'string') {
-            var baseInfo = ns.View.info(base);
-            info.events = extend({}, baseInfo.events, info.events);
-        }
-    });
-
-    params.slice(0, params.length - 1).forEach(function (base) {
-        if (typeof base === 'string') {
-            var baseInfo = ns.View.info(base);
-            info.methods = extend({}, baseInfo.methods, info.methods);
-        }
-    });
-*/
-    return info;
 }
 
 [ ns.View, ns.ViewCollection ].forEach(function (classExtend) {
