@@ -17,8 +17,8 @@ ns.View.edefine('my-child', {
 Либо указание миксинов в свойстве `mixins`.
 ```js
 ns.View.edefine('my-child', {
-    mixins: [ 'myMixinView2' ]
-}, 'myMixinView1', 'myParentView');
+    mixins: [ 'myMixinView1' ]
+}, 'myMixinView2', 'myParentView');
 ```
 
 Т.к. в JavaScript нельзя реализовать множественное наследование, не изменив цепочку прототипов родителей,
@@ -53,11 +53,11 @@ ns.View.define('mixin2', {
 });
 
 ns.View.edefine('child', {
-    mixins: [ 'mixin2' ],
+    mixins: [ 'mixin1' ],
     events: {
         'event': 'callback-child'
     }
-}, 'mixin1', 'parent');
+}, 'mixin2', 'parent');
 ```
 
 В результате декларация событий `child` будет иметь вид:
