@@ -97,7 +97,13 @@ ns.View.edefine('child', {
 
 Последовательность вызовов конструкторов и колбеков на одинаковое событие общая - всегда от предка через миксины к потомку:
 ```
-... -> callback-parent-mixinN -> callback-parent -> callback-child-mixin1 -> ... -> callback-child-mixinN -> callback-child
+... ->
+callback-parent-mixinN ->
+callback-parent ->
+callback-child-mixin1 ->
+... ->
+callback-child-mixinN ->
+callback-child
 ```
 
 Вначале вызываются колбеки миксинов, объявленных в свойстве `mixins`, а потом миксины в аргументах.
