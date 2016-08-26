@@ -46,8 +46,8 @@
 
 	'use strict';
 
-	var ns = __webpack_require__(1);
-	var _ = __webpack_require__(2);
+	var _ = __webpack_require__(1);
+	var ns = __webpack_require__(2);
 
 	var PATH_EXTENDS = ['ctor', 'events', 'methods'];
 	var PATH_PARENT_EXTENDS = ['ctor', 'events'];
@@ -58,8 +58,8 @@
 	        args[_key - 2] = arguments[_key];
 	    }
 
+	    srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke.apply(_, [this, srcFunc].concat(args)));
 	    objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke.apply(_, [this, objFunc].concat(args)));
-	    srcFunc && (_.isFunction(srcFunc) ? objFunc.apply(this, args) : _.invoke.apply(_, [this, srcFunc].concat(args)));
 	}
 
 	function eventsCustomizer(objValue, srcValue) {
@@ -81,8 +81,8 @@
 	                args[_key2] = arguments[_key2];
 	            }
 
-	            objValue && objValue.apply(this, args);
 	            srcValue && srcValue.apply(this, args);
+	            objValue && objValue.apply(this, args);
 	        };
 	    }
 	}
@@ -98,9 +98,10 @@
 	 * @returns {Object} Модифицированный объект-информация
 	 */
 	function inheritInfo(child, mixins) {
+	    mixins = _.clone(mixins);
 	    var parent = viewInfo(mixins.pop());
 
-	    return _(child).chain().get('mixins', []).concat(_.get(parent, 'mixins', [])).concat(mixins).unshift({}, child).map(function (mixin) {
+	    return _(child).chain().get('mixins', []).concat(mixins).unshift({}, child).map(function (mixin) {
 	        return _.pick(viewInfo(mixin), PATH_EXTENDS);
 	    }).push(mergeCustomizer).thru(spreadMergeWith).mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), mergeCustomizer).defaults(child).value();
 	}
@@ -119,13 +120,13 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = ns;
+	module.exports = _;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = _;
+	module.exports = ns;
 
 /***/ }
 /******/ ]);

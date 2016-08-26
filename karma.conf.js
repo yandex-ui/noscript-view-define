@@ -1,5 +1,6 @@
-// Karma configuration
-// Generated on Mon Apr 21 2014 17:27:31 GMT+0400 (MSK)
+var path = require('path');
+var webpack = require('webpack');
+var src = path.join(__dirname, 'src');
 
 module.exports = function(config) {
   config.set({
@@ -15,27 +16,58 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "http://yastatic.net/jquery/1.11.0/jquery.min.js",
-
+      'node_modules/jquery/dist/jquery.min.js',
+      'node_modules/lodash/lodash.min.js',
       'node_modules/noscript/dist/noscript.js',
-
-      'ns.view.edefine.js',
-
       'test/stub/*.js',
-
-      'test/spec/*.js'
+      'test/spec/*.js',
+      'src/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      
+
     ],
+
+    preprocessors: {
+        'test/**/*.js': [ 'webpack' ],
+        'src/**/*.js': [ 'webpack', 'sourcemap' ]
+    },
+
+    webpack: {
+        'devtool': '#inline-source-map',
+        'externals': {
+            'ns': 'ns',
+            'lodash': '_'
+        },
+        'module': {
+            'loaders': [
+                {
+                    'test': /\.js$/,
+                    'loader': 'babel',
+                    'include': [
+                        path.join(__dirname, 'src'),
+                        path.join(__dirname, 'test')
+                    ]
+                }
+            ],
+            'postLoaders': [
+                {
+                    'test': /\.js/,
+                    'loader': 'istanbul-instrumenter',
+                    'include': [
+                        path.join(__dirname, 'src')
+                    ]
+                }
+            ]
+        }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: [ 'progress', 'coverage' ],
 
 
     // web server port

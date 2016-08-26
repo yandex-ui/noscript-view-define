@@ -1,13 +1,13 @@
-const ns = require('ns');
 const _ = require('lodash');
+const ns = require('ns');
 
 const PATH_EXTENDS = [ 'ctor', 'events', 'methods' ];
 const PATH_PARENT_EXTENDS = [ 'ctor', 'events' ];
 const spreadMergeWith = _.spread(_.mergeWith);
 
 function wrapperEvents(srcFunc, objFunc, ...args) {
+    srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke(this, srcFunc, ...args));
     objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke(this, objFunc, ...args));
-    srcFunc && (_.isFunction(srcFunc) ? objFunc.apply(this, args) : _.invoke(this, srcFunc, ...args));
 }
 
 function eventsCustomizer(objValue, srcValue) {
@@ -25,8 +25,8 @@ function mergeCustomizer(objValue, srcValue, key) {
 
     if (key === 'ctor') {
         return function (...args) {
-            objValue && objValue.apply(this, args);
             srcValue && srcValue.apply(this, args);
+            objValue && objValue.apply(this, args);
         };
     }
 }
@@ -42,12 +42,12 @@ function viewInfo(info) {
  * @returns {Object} Модифицированный объект-информация
  */
 function inheritInfo(child, mixins) {
+    mixins = _.clone(mixins);
     const parent = viewInfo(mixins.pop());
 
     return _(child)
         .chain()
         .get('mixins', [])
-        .concat(_.get(parent, 'mixins', []))
         .concat(mixins)
         .unshift({}, child)
         .map(mixin => _.pick(viewInfo(mixin), PATH_EXTENDS))

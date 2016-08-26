@@ -1,33 +1,25 @@
-beforeEach(function() {
-    this.sinon = sinon.sandbox.create();
-});
+(function () {
 
-afterEach(function() {
-    this.sinon.restore();
-    ns.reset();
-});
-
-// for phantomjs
-if (!Function.prototype.bind) {
-    Function.prototype.bind = function (oThis) {
-        if (typeof this !== "function") {
-            // closest thing possible to the ECMAScript 5 internal IsCallable function
-            throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    function clearTestContext(context) {
+        if (!context || typeof context !== 'object') {
+            return;
         }
 
-        var aArgs = Array.prototype.slice.call(arguments, 1),
-            fToBind = this,
-            fNOP = function () {},
-            fBound = function () {
-                return fToBind.apply(this instanceof fNOP && oThis
-                        ? this
-                        : oThis,
-                    aArgs.concat(Array.prototype.slice.call(arguments)));
-            };
+        for (var property in context) {
+            if (context.hasOwnProperty(property)) {
+                delete context[ property ];
+            }
+        }
+    }
 
-        fNOP.prototype = this.prototype;
-        fBound.prototype = new fNOP();
+    beforeEach(function () {
+        this.sinon = sinon.sandbox.create();
+    });
 
-        return fBound;
-    };
-}
+    afterEach(function () {
+        this.sinon.restore();
+        clearTestContext(this);
+        ns.reset();
+    });
+
+}());

@@ -3,16 +3,13 @@
   "version": "0.0.3",
   "description": "Плагин для noscript, улучшающий наследование View",
   "keywords": [
-    "noscript"
+    "noscript",
+    "yate"
   ],
   "repository": {
     "type": "git",
     "url": "git://github.com/yandex-ui/noscript-view-edefine.git"
   },
-  "keywords": [
-    "noscript",
-    "yate"
-  ],
   "author": "Aleksei Androsov <doochik@ya.ru>",
   "license": "MIT",
   "bugs": {
@@ -28,16 +25,26 @@
     "babel-preset-es2015": "6.13.2",
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "6.11.6",
+    "chai": "3.5.0",
     "eslint": "3.3.0",
     "eslint-config-yandex": "1.0.6",
     "eslint-loader": "1.5.0",
-    "karma": "0.12.x",
-    "karma-mocha": "^0.1.3",
-    "karma-phantomjs-launcher": "~0.1.0",
-    "karma-sinon-chai": "0.1.x",
+    "istanbul-instrumenter-loader": "0.2.0",
+    "jquery": "1.11.3",
+    "karma": "1.1.1",
+    "karma-babel-preprocessor": "6.0.1",
+    "karma-chai": "0.1.0",
+    "karma-coverage": "1.1.0",
+    "karma-mocha": "1.1.1",
+    "karma-phantomjs-launcher": "1.0.1",
+    "karma-sinon-chai": "1.2.2",
+    "karma-sourcemap-loader": "0.3.7",
+    "karma-webpack": "1.7.0",
     "lodash": "4.15.0",
-    "mocha": "^1.18.2",
+    "mocha": "1.18.2",
     "noscript": ">=0.4.3",
+    "sinon": "1.17.4",
+    "sinon-chai": "2.8.0",
     "webpack": "1.13.2"
   },
   "directories": {
