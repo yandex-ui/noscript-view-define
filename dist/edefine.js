@@ -49,8 +49,8 @@
 	var _ = __webpack_require__(1);
 	var ns = __webpack_require__(2);
 
-	var PATH_EXTENDS = ['ctor', 'events', 'methods'];
-	var PATH_PARENT_EXTENDS = ['ctor', 'events'];
+	var PATH_EXTENDS = ['ctor', 'events', 'models', 'methods'];
+	var PATH_PARENT_EXTENDS = ['ctor', 'events', 'models'];
 	var spreadMergeWith = _.spread(_.mergeWith);
 
 	function wrapperEvents(srcFunc, objFunc) {
@@ -62,17 +62,58 @@
 	    objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke.apply(_, [this, objFunc].concat(args)));
 	}
 
-	function eventsCustomizer(objValue, srcValue) {
-	    if (!objValue) {
+	/**
+	 * Объединение колбеков одинаковых событий
+	 * @param {string|function} objValue
+	 * @param {string|function} srcValue
+	 * @param {string} key
+	 * @returns {string|function}
+	 */
+	function eventsCustomizer(objValue, srcValue, key) {
+	    if (checkIgnoreMerge(objValue, srcValue)) {
 	        return srcValue;
+	    }
+
+	    if (objValue === 'invalidate' && srcValue === 'keepValid' || objValue === 'keepValid' && srcValue === 'invalidate') {
+
+	        ns.assert.fail('ns.View', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
 	    }
 
 	    return _.wrap(objValue, _.wrap(srcValue, wrapperEvents));
 	}
 
+	/**
+	 * Объединение объектов событий
+	 * @param {Object} objValue
+	 * @param {Object} srcValue
+	 * @returns {Object}
+	 */
+	function groupEventsCustomizer(objValue, srcValue) {
+	    if (checkIgnoreMerge(objValue, srcValue)) {
+	        return srcValue;
+	    }
+
+	    return _.mergeWith(objValue, srcValue, eventsCustomizer);
+	}
+
+	/**
+	 * Объединения данных при наследовании
+	 * @param {*} objValue
+	 * @param {*} srcValue
+	 * @param {string} key
+	 * @returns {*}
+	 */
 	function mergeCustomizer(objValue, srcValue, key) {
+	    if (checkIgnoreMerge(objValue, srcValue)) {
+	        return srcValue;
+	    }
+
 	    if (key === 'events') {
-	        return _.mergeWith(objValue, srcValue, eventsCustomizer);
+	        return groupEventsCustomizer(objValue, srcValue);
+	    }
+
+	    if (key === 'models') {
+	        return _.mergeWith(this._formatModelsDecl(objValue), this._formatModelsDecl(srcValue), groupEventsCustomizer);
 	    }
 
 	    if (key === 'ctor') {
@@ -87,23 +128,40 @@
 	    }
 	}
 
+	/**
+	 * Получение информации по виду
+	 * @param {Object|string} info
+	 * @returns {Object}
+	 */
 	function viewInfo(info) {
 	    return _.isString(info) && ns.View.info(info) || info;
 	}
 
 	/**
+	 * Проверка необходимости выполнения слияния
+	 * @param {*} objValue
+	 * @param {*} srcValue
+	 * @returns {boolean}
+	 */
+	function checkIgnoreMerge(objValue, srcValue) {
+	    return _.isUndefined(objValue) || objValue === srcValue;
+	}
+
+	/**
 	 * Хелпер для наследования событийных привязок и методов
+	 * @param {Object} classExtend Расширяемый объект
 	 * @param {Object} child Объект-информация о сущности
 	 * @param {array} mixins Массив имен предков
 	 * @returns {Object} Модифицированный объект-информация
 	 */
-	function inheritInfo(child, mixins) {
+	function inheritInfo(classExtend, child, mixins) {
 	    mixins = _.clone(mixins);
 	    var parent = viewInfo(mixins.pop());
+	    var customizer = mergeCustomizer.bind(classExtend);
 
-	    return _(child).chain().get('mixins', []).concat(mixins).unshift({}, child).map(function (mixin) {
+	    return _(child).chain().get('mixins', []).concat(mixins).reverse().unshift({}, child).map(function (mixin) {
 	        return _.pick(viewInfo(mixin), PATH_EXTENDS);
-	    }).push(mergeCustomizer).thru(spreadMergeWith).mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), mergeCustomizer).defaults(child).value();
+	    }).push(customizer).thru(spreadMergeWith).mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), customizer).defaults(child).value();
 	}
 
 	[ns.View, ns.ViewCollection].forEach(function (classExtend) {
@@ -112,7 +170,7 @@
 	            mixins[_key3 - 2] = arguments[_key3];
 	        }
 
-	        return classExtend.define(id, inheritInfo(info, mixins), _.last(mixins));
+	        return classExtend.define(id, inheritInfo(classExtend, info, mixins), _.last(mixins));
 	    };
 	});
 
