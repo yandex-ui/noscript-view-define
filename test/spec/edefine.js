@@ -70,6 +70,26 @@ describe('ns-view-edefine', function() {
             expect(spy2.calledAfter(spy1)).to.be.ok;
             expect(spy3.calledAfter(spy2)).to.be.ok;
         });
+
+        it('колбеки вызываются в контексте создаваемого объекта вида', function() {
+            var spy1 = this.sinon.spy();
+            var spy2 = this.sinon.spy();
+            var spy3 = this.sinon.spy();
+            var spy4 = this.sinon.spy();
+
+            ns.View.define('sbase');
+            ns.View.define('bmixin', { events: { 'ns-view-init': spy1 } });
+            ns.View.edefine('base', { events: { 'ns-view-init': spy2 } }, 'bmixin', 'sbase');
+            ns.View.define('mixin', { events: { 'ns-view-init': spy3 } });
+            ns.View.edefine('child-events-inherit4', { events: { 'ns-view-init': spy4 } }, 'mixin', 'base');
+
+            var view = ns.View.create('child-events-inherit4');
+
+            expect(spy1.calledOn(view)).to.be.ok;
+            expect(spy2.calledOn(view)).to.be.ok;
+            expect(spy3.calledOn(view)).to.be.ok;
+            expect(spy4.calledOn(view)).to.be.ok;
+        });
     });
 
     describe('конструктор', function() {
@@ -319,6 +339,28 @@ describe('ns-view-edefine', function() {
                     }
                 }, 'mixin', 'base');
             }).to.throw(Error);
+        });
+
+        it('колбеки вызываются в контексте создаваемого объекта вида', function() {
+            var spy1 = this.sinon.spy();
+            var spy2 = this.sinon.spy();
+            var spy3 = this.sinon.spy();
+            var spy4 = this.sinon.spy();
+
+            ns.View.define('sbase');
+            ns.View.define('bmixin', { models: { 'model1': { 'custom_event': spy1 } } });
+            ns.View.edefine('base', { models: { 'model1': { 'custom_event': spy2 } } }, 'bmixin', 'sbase');
+            ns.View.define('mixin', { models: { 'model1': { 'custom_event': spy3 } } });
+            ns.View.edefine('child-models-inherit4', { models: { 'model1': { 'custom_event': spy4 } } }, 'mixin', 'base');
+
+            var view = ns.View.create('child-models-inherit4');
+            view._show();
+            ns.Model.get('model1').trigger('custom_event');
+
+            expect(spy1.calledOn(view)).to.be.ok;
+            expect(spy2.calledOn(view)).to.be.ok;
+            expect(spy3.calledOn(view)).to.be.ok;
+            expect(spy4.calledOn(view)).to.be.ok;
         });
     });
 
