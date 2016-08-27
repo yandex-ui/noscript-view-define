@@ -1,3 +1,4 @@
+---
 engines:
   duplication:
     enabled: true
@@ -9,6 +10,9 @@ engines:
       - php
   eslint:
     enabled: true
+    checks:
+      valid-jsdoc:
+        enabled: false
   fixme:
     enabled: true
 ratings:
@@ -21,5 +25,8 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-- dist/
-- test/
+- dist/*
+- test/*
+- samples/*
+- karma.conf.js
+- webpack.config.js
