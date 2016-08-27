@@ -1,5 +1,7 @@
 # noscript-view-edefine
 
+[![Code Climate](https://codeclimate.com/github/yandex-ui/noscript-view-edefine/badges/gpa.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-edefine)
+
 Плагин для noscript, улучшающий наследование View.
 Доблавляет новые возможности:
  * множественное наследование (через миксины)
