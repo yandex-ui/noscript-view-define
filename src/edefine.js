@@ -20,9 +20,21 @@ const PATH_PARENT_EXTENDS = [ 'ctor', 'events', 'models' ];
  */
 const spreadMergeWith = _.spread(_.mergeWith);
 
+/**
+ * Вывод предупреждения в консоль
+ * @type {function}
+ */
+const warn = _.wrap(_.invoke, function(invoke, ...args) {
+    invoke(window, 'console.warn', '[ns.View.edefine]', ...args);
+});
+
 function wrapperEvents(srcFunc, objFunc, ...args) {
-    srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke(this, srcFunc, ...args));
-    objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke(this, objFunc, ...args));
+    const resultSrc = srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke(this, srcFunc, ...args));
+    const resultObj = objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke(this, objFunc, ...args));
+
+    if (ns.DEBUG && !(_.isUndefined(resultSrc) && _.isUndefined(resultObj))) {
+        warn('Обработчик события не должен возвращать результат');
+    }
 }
 
 /**
@@ -40,7 +52,7 @@ function eventsCustomizer(objValue, srcValue, key) {
     if ((objValue === 'invalidate' && srcValue === 'keepValid') ||
         (objValue === 'keepValid' && srcValue === 'invalidate')) {
 
-        ns.assert.fail('ns.View', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
+        ns.assert.fail('ns.View.edefine', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
     }
 
     return _.wrap(objValue, _.wrap(srcValue, wrapperEvents));
