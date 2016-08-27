@@ -1,8 +1,23 @@
 const _ = require('lodash');
 const ns = require('ns');
 
-const PATH_EXTENDS = [ 'ctor', 'events', 'models', 'methods' ];
+/**
+ * Свойства, которые будут учтены при объединении миксинов.
+ * Порядок важен: первым должны объединить методы.
+ * @type {array}
+ */
+const PATH_EXTENDS = [ 'methods', 'ctor', 'events', 'models' ];
+
+/**
+ * Свойства, которые будут учтены при объединении предка.
+ * @type {array}
+ */
 const PATH_PARENT_EXTENDS = [ 'ctor', 'events', 'models' ];
+
+/**
+ * Объединение объектов, переданных в виде массива.
+ * @type {function}
+ */
 const spreadMergeWith = _.spread(_.mergeWith);
 
 function wrapperEvents(srcFunc, objFunc, ...args) {
@@ -46,6 +61,22 @@ function groupEventsCustomizer(objValue, srcValue) {
 }
 
 /**
+ * Объединение методов и свойств.
+ * Методы и свойства переопределяются в порядке перечисления миксинов.
+ * Дитё переопределяет любой метод и свойство.
+ * @param {*} objValue
+ * @param {*} srcValue
+ * @returns {*}
+ */
+function methodsCustomizer(objValue, srcValue) {
+    if (checkIgnoreMerge(objValue, srcValue)) {
+        return srcValue;
+    }
+
+    return objValue;
+}
+
+/**
  * Объединения данных при наследовании
  * @param {*} objValue
  * @param {*} srcValue
@@ -55,6 +86,10 @@ function groupEventsCustomizer(objValue, srcValue) {
 function mergeCustomizer(objValue, srcValue, key) {
     if (checkIgnoreMerge(objValue, srcValue)) {
         return srcValue;
+    }
+
+    if (key === 'methods') {
+        return _.mergeWith(objValue, srcValue, methodsCustomizer);
     }
 
     if (key === 'events') {
@@ -113,7 +148,7 @@ function inheritInfo(classExtend, child, mixins) {
         .get('mixins', [])
         .concat(mixins)
         .reverse()
-        .unshift({}, child)
+        .unshift(child)
         .map(mixin => _.pick(viewInfo(mixin), PATH_EXTENDS))
         .push(customizer)
         .thru(spreadMergeWith)

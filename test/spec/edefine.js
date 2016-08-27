@@ -140,8 +140,55 @@ describe('ns-view-edefine', function() {
             ns.View.define('mixin', { methods: { fn3: function() {} } });
             ns.View.edefine('child-methods-inherit1', { methods: { fn4: function() {} } }, 'mixin', 'base');
 
-            var info = ns.View.info('child-methods-inherit1');
-            expect(info.methods).to.have.keys([ 'fn3', 'fn4' ]);
+            var view = ns.View.create('child-methods-inherit1');
+
+            expect(view).to.respondTo('fn1');
+            expect(view).to.respondTo('fn2');
+            expect(view).to.respondTo('fn3');
+            expect(view).to.respondTo('fn4');
+        });
+
+        it('метод потомка должен переопределить метод миксина', function() {
+            var spy2 = this.sinon.spy();
+            var spy3 = this.sinon.spy();
+
+            ns.View.define('mixin', { methods: { fn: spy2 } });
+            ns.View.edefine('child-methods-inherit2', { mixins: [ 'mixin' ], methods: { fn: spy3 } });
+
+            var view = ns.View.create('child-methods-inherit2');
+            view.fn();
+
+            expect(spy2.callCount).to.be.equal(0);
+            expect(spy3.callCount).to.be.equal(1);
+        });
+
+        it('метод потомка должен переопределить метод предка', function() {
+            var spy1 = this.sinon.spy();
+            var spy2 = this.sinon.spy();
+
+            ns.View.define('base', { methods: { fn: spy1 } });
+            ns.View.edefine('child-methods-inherit3', { methods: { fn: spy2 } }, 'base');
+
+            var view = ns.View.create('child-methods-inherit3');
+            view.fn();
+
+            expect(spy1.callCount).to.be.equal(0);
+            expect(spy2.callCount).to.be.equal(1);
+        });
+
+        it('миксины перебивают методы других миксинов в порядке перечисления', function() {
+            var spy1 = this.sinon.spy();
+            var spy2 = this.sinon.spy();
+
+            ns.View.define('mixin1', { methods: { fn: spy1 } });
+            ns.View.define('mixin2', { methods: { fn: spy2 } });
+            ns.View.edefine('child-methods-inherit4', { mixins: [ 'mixin1', 'mixin2' ] });
+
+            var view = ns.View.create('child-methods-inherit4');
+            view.fn();
+
+            expect(spy1.callCount).to.be.equal(0);
+            expect(spy2.callCount).to.be.equal(1);
         });
     });
 
