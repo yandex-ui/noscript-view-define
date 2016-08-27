@@ -49,17 +49,48 @@
 	var _ = __webpack_require__(1);
 	var ns = __webpack_require__(2);
 
-	var PATH_EXTENDS = ['ctor', 'events', 'models', 'methods'];
+	/**
+	 * Свойства, которые будут учтены при объединении миксинов.
+	 * Порядок важен: первым должны объединить методы.
+	 * @type {array}
+	 */
+	var PATH_EXTENDS = ['methods', 'ctor', 'events', 'models'];
+
+	/**
+	 * Свойства, которые будут учтены при объединении предка.
+	 * @type {array}
+	 */
 	var PATH_PARENT_EXTENDS = ['ctor', 'events', 'models'];
+
+	/**
+	 * Объединение объектов, переданных в виде массива.
+	 * @type {function}
+	 */
 	var spreadMergeWith = _.spread(_.mergeWith);
 
-	function wrapperEvents(srcFunc, objFunc) {
-	    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-	        args[_key - 2] = arguments[_key];
+	/**
+	 * Вывод предупреждения в консоль
+	 * @type {function}
+	 */
+	var warn = _.wrap(_.invoke, function (invoke) {
+	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	        args[_key - 1] = arguments[_key];
 	    }
 
-	    srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke.apply(_, [this, srcFunc].concat(args)));
-	    objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke.apply(_, [this, objFunc].concat(args)));
+	    invoke.apply(undefined, [window, 'console.warn', '[ns.View.edefine]'].concat(args));
+	});
+
+	function wrapperEvents(srcFunc, objFunc) {
+	    for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+	        args[_key2 - 2] = arguments[_key2];
+	    }
+
+	    var resultSrc = srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke.apply(_, [this, srcFunc].concat(args)));
+	    var resultObj = objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke.apply(_, [this, objFunc].concat(args)));
+
+	    if (ns.DEBUG && !(_.isUndefined(resultSrc) && _.isUndefined(resultObj))) {
+	        warn('Обработчик события не должен возвращать результат');
+	    }
 	}
 
 	/**
@@ -76,7 +107,7 @@
 
 	    if (objValue === 'invalidate' && srcValue === 'keepValid' || objValue === 'keepValid' && srcValue === 'invalidate') {
 
-	        ns.assert.fail('ns.View', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
+	        ns.assert.fail('ns.View.edefine', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
 	    }
 
 	    return _.wrap(objValue, _.wrap(srcValue, wrapperEvents));
@@ -97,6 +128,22 @@
 	}
 
 	/**
+	 * Объединение методов и свойств.
+	 * Методы и свойства переопределяются в порядке перечисления миксинов.
+	 * Дитё переопределяет любой метод и свойство.
+	 * @param {*} objValue
+	 * @param {*} srcValue
+	 * @returns {*}
+	 */
+	function methodsCustomizer(objValue, srcValue) {
+	    if (checkIgnoreMerge(objValue, srcValue)) {
+	        return srcValue;
+	    }
+
+	    return objValue;
+	}
+
+	/**
 	 * Объединения данных при наследовании
 	 * @param {*} objValue
 	 * @param {*} srcValue
@@ -106,6 +153,10 @@
 	function mergeCustomizer(objValue, srcValue, key) {
 	    if (checkIgnoreMerge(objValue, srcValue)) {
 	        return srcValue;
+	    }
+
+	    if (key === 'methods') {
+	        return _.mergeWith(objValue, srcValue, methodsCustomizer);
 	    }
 
 	    if (key === 'events') {
@@ -118,12 +169,8 @@
 
 	    if (key === 'ctor') {
 	        return function () {
-	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	                args[_key2] = arguments[_key2];
-	            }
-
-	            srcValue && srcValue.apply(this, args);
-	            objValue && objValue.apply(this, args);
+	            srcValue && srcValue.call(this);
+	            objValue && objValue.call(this);
 	        };
 	    }
 	}
@@ -159,7 +206,7 @@
 	    var parent = viewInfo(mixins.pop());
 	    var customizer = mergeCustomizer.bind(classExtend);
 
-	    return _(child).chain().get('mixins', []).concat(mixins).reverse().unshift({}, child).map(function (mixin) {
+	    return _(child).chain().get('mixins', []).concat(mixins).reverse().unshift(child).map(function (mixin) {
 	        return _.pick(viewInfo(mixin), PATH_EXTENDS);
 	    }).push(customizer).thru(spreadMergeWith).mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), customizer).defaults(child).value();
 	}

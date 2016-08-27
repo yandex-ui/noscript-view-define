@@ -24,7 +24,7 @@ const spreadMergeWith = _.spread(_.mergeWith);
  * Вывод предупреждения в консоль
  * @type {function}
  */
-const warn = _.wrap(_.invoke, function(invoke, ...args) {
+const warn = _.wrap(_.invoke, function (invoke, ...args) {
     invoke(window, 'console.warn', '[ns.View.edefine]', ...args);
 });
 

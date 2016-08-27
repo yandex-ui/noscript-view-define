@@ -53,6 +53,7 @@
   "scripts": {
     "prod": "./node_modules/.bin/webpack --progress",
     "dev": "./node_modules/.bin/webpack --progress --watch",
-    "test": "./node_modules/karma/bin/karma start"
+    "test": "./node_modules/karma/bin/karma start",
+    "codeclimate": "npm run test; CODECLIMATE_REPO_TOKEN=8a28635f98446f2cb3c2135bd681dcb5fd948e85bfafc5fd326e738a80142c78 codeclimate-test-reporter < coverage/report/lcov.info"
   }
 }
