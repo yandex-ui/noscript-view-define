@@ -105,9 +105,9 @@ function mergeCustomizer(objValue, srcValue, key) {
     }
 
     if (key === 'ctor') {
-        return function (...args) {
-            srcValue && srcValue.apply(this, args);
-            objValue && objValue.apply(this, args);
+        return function () {
+            srcValue && srcValue.call(this);
+            objValue && objValue.call(this);
         };
     }
 }

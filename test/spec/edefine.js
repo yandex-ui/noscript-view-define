@@ -130,6 +130,26 @@ describe('ns-view-edefine', function() {
             expect(spy3.calledAfter(spy2)).to.be.ok;
             expect(spy4.calledAfter(spy3)).to.be.ok;
         });
+
+        it('конструктор вызывается в контексте создаваемого объекта вида', function() {
+            var spy1 = this.sinon.spy();
+            var spy2 = this.sinon.spy();
+            var spy3 = this.sinon.spy();
+            var spy4 = this.sinon.spy();
+
+            ns.View.define('sbase');
+            ns.View.define('bmixin', { ctor: spy1 });
+            ns.View.edefine('base', { ctor: spy2 }, 'bmixin', 'sbase');
+            ns.View.define('mixin', { ctor: spy3 });
+            ns.View.edefine('child-ctor-inherit4', { ctor: spy4 }, 'mixin', 'base');
+
+            var view = ns.View.create('child-ctor-inherit4');
+
+            expect(spy1.calledOn(view)).to.be.ok;
+            expect(spy2.calledOn(view)).to.be.ok;
+            expect(spy3.calledOn(view)).to.be.ok;
+            expect(spy4.calledOn(view)).to.be.ok;
+        });
     });
 
     describe('наследование методов', function() {
