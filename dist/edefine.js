@@ -77,7 +77,8 @@
 	        args[_key - 1] = arguments[_key];
 	    }
 
-	    invoke.apply(undefined, [window, 'console.warn', '[ns.View.edefine]'].concat(args));
+	    var text = args.shift();
+	    invoke.apply(undefined, [window, 'console.warn', '[ns.View.edefine] ' + text].concat(args));
 	});
 
 	/**
@@ -89,7 +90,8 @@
 	        args[_key2 - 1] = arguments[_key2];
 	    }
 
-	    invoke.apply(undefined, [window, 'console.log', '[ns.View.edefine]'].concat(args));
+	    var text = args.shift();
+	    invoke.apply(undefined, [window, 'console.log', '[ns.View.edefine] ' + text].concat(args));
 	});
 
 	function wrapperEvents(srcFunc, objFunc) {

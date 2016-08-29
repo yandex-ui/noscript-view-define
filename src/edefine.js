@@ -25,7 +25,8 @@ const spreadMergeWith = _.spread(_.mergeWith);
  * @type {function}
  */
 const warn = _.wrap(_.invoke, function (invoke, ...args) {
-    invoke(window, 'console.warn', '[ns.View.edefine]', ...args);
+    const text = args.shift();
+    invoke(window, 'console.warn', '[ns.View.edefine] ' + text, ...args);
 });
 
 /**
@@ -33,7 +34,8 @@ const warn = _.wrap(_.invoke, function (invoke, ...args) {
  * @type {function}
  */
 const log = _.wrap(_.invoke, function (invoke, ...args) {
-    invoke(window, 'console.log', '[ns.View.edefine]', ...args);
+    const text = args.shift();
+    invoke(window, 'console.log', '[ns.View.edefine] ' + text, ...args);
 });
 
 function wrapperEvents(srcFunc, objFunc, ...args) {
