@@ -249,7 +249,7 @@
 	     * @param {Object|boolean} [defaultDecl=false] значение событий по умолчанию
 	     * @returns {Object}
 	     */
-	    classExtend.edefineEvents = function (events) {
+	    classExtend.edefineModelEvents = function (events) {
 	        var defaultDecl = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 	        return _.defaults({}, events, _.get(classExtend._formatModelsDecl({ test: defaultDecl }), 'test'));

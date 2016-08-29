@@ -199,7 +199,7 @@ function inheritInfo(classExtend, child, mixins) {
      * @param {Object|boolean} [defaultDecl=false] значение событий по умолчанию
      * @returns {Object}
      */
-    classExtend.edefineEvents = function (events, defaultDecl = false) {
+    classExtend.edefineModelEvents = function (events, defaultDecl = false) {
         return _.defaults({}, events, _.get(classExtend._formatModelsDecl({ test: defaultDecl }), 'test'));
     };
 });
