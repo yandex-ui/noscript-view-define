@@ -80,9 +80,21 @@
 	    invoke.apply(undefined, [window, 'console.warn', '[ns.View.edefine]'].concat(args));
 	});
 
+	/**
+	 * Вывод лога в консоль
+	 * @type {function}
+	 */
+	var log = _.wrap(_.invoke, function (invoke) {
+	    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	        args[_key2 - 1] = arguments[_key2];
+	    }
+
+	    invoke.apply(undefined, [window, 'console.log', '[ns.View.edefine]'].concat(args));
+	});
+
 	function wrapperEvents(srcFunc, objFunc) {
-	    for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-	        args[_key2 - 2] = arguments[_key2];
+	    for (var _len3 = arguments.length, args = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+	        args[_key3 - 2] = arguments[_key3];
 	    }
 
 	    var resultSrc = srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke.apply(_, [this, srcFunc].concat(args)));
@@ -213,10 +225,11 @@
 
 	[ns.View, ns.ViewCollection].forEach(function (classExtend) {
 	    classExtend.edefine = function (id, info) {
-	        for (var _len3 = arguments.length, mixins = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
-	            mixins[_key3 - 2] = arguments[_key3];
+	        for (var _len4 = arguments.length, mixins = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
+	            mixins[_key4 - 2] = arguments[_key4];
 	        }
 
+	        ns.DEBUG && log('Определение вида %s: %o', id, mixins);
 	        return classExtend.define(id, inheritInfo(classExtend, info, mixins), _.last(mixins));
 	    };
 	});

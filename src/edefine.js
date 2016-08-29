@@ -28,6 +28,14 @@ const warn = _.wrap(_.invoke, function (invoke, ...args) {
     invoke(window, 'console.warn', '[ns.View.edefine]', ...args);
 });
 
+/**
+ * Вывод лога в консоль
+ * @type {function}
+ */
+const log = _.wrap(_.invoke, function (invoke, ...args) {
+    invoke(window, 'console.log', '[ns.View.edefine]', ...args);
+});
+
 function wrapperEvents(srcFunc, objFunc, ...args) {
     const resultSrc = srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke(this, srcFunc, ...args));
     const resultObj = objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke(this, objFunc, ...args));
@@ -171,6 +179,7 @@ function inheritInfo(classExtend, child, mixins) {
 
 [ ns.View, ns.ViewCollection ].forEach(function (classExtend) {
     classExtend.edefine = function (id, info, ...mixins) {
+        ns.DEBUG && log('Определение вида %s: %o', id, mixins);
         return classExtend.define(id, inheritInfo(classExtend, info, mixins), _.last(mixins));
     };
 });
