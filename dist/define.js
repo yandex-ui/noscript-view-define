@@ -94,7 +94,7 @@
 	    }
 
 	    var text = args.shift();
-	    func.apply(undefined, [window, 'console.warn', '[ns.View.edefine] ' + text].concat(args));
+	    func.apply(undefined, [window, 'console.warn', '[ns.View.define] ' + text].concat(args));
 	});
 
 	/**
@@ -107,7 +107,7 @@
 	    }
 
 	    var text = args.shift();
-	    func.apply(undefined, [window, 'console.log', '[ns.View.edefine] ' + text].concat(args));
+	    func.apply(undefined, [window, 'console.log', '[ns.View.define] ' + text].concat(args));
 	});
 
 	function wrapperEvents(srcFunc, objFunc) {
@@ -137,7 +137,7 @@
 
 	    if (objValue === 'invalidate' && srcValue === 'keepValid' || objValue === 'keepValid' && srcValue === 'invalidate') {
 
-	        ns.assert.fail('ns.View.edefine', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
+	        ns.assert.fail('ns.View.define', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
 	    }
 
 	    return wrap(objValue, wrap(srcValue, wrapperEvents));

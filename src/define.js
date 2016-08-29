@@ -42,7 +42,7 @@ const spreadMergeWith = spread(mergeWith);
  */
 const warn = wrap(invoke, function (func, ...args) {
     const text = args.shift();
-    func(window, 'console.warn', '[ns.View.edefine] ' + text, ...args);
+    func(window, 'console.warn', '[ns.View.define] ' + text, ...args);
 });
 
 /**
@@ -51,7 +51,7 @@ const warn = wrap(invoke, function (func, ...args) {
  */
 const log = wrap(invoke, function (func, ...args) {
     const text = args.shift();
-    func(window, 'console.log', '[ns.View.edefine] ' + text, ...args);
+    func(window, 'console.log', '[ns.View.define] ' + text, ...args);
 });
 
 function wrapperEvents(srcFunc, objFunc, ...args) {
@@ -78,7 +78,7 @@ function eventsCustomizer(objValue, srcValue, key) {
     if ((objValue === 'invalidate' && srcValue === 'keepValid') ||
         (objValue === 'keepValid' && srcValue === 'invalidate')) {
 
-        ns.assert.fail('ns.View.edefine', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
+        ns.assert.fail('ns.View.define', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
     }
 
     return wrap(objValue, wrap(srcValue, wrapperEvents));

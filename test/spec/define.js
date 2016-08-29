@@ -1,6 +1,6 @@
 var ns = require('ns');
 
-describe('ns-view-edefine', function() {
+describe('ns-view-define', function() {
     beforeEach(function() {
         this.tested = ns.View.defineNg;
     });
@@ -436,7 +436,7 @@ describe('ns-view-edefine', function() {
     });
 });
 
-describe('ns-viewCollection-edefine', function() {
+describe('ns-viewCollection-define', function() {
 
     beforeEach(function() {
         this.tested = ns.ViewCollection.defineNg;

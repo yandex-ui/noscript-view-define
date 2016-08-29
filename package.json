@@ -1,5 +1,5 @@
 {
-  "name": "noscript-view-edefine",
+  "name": "noscript-view-define",
   "version": "2.0.0",
   "description": "Плагин для noscript, улучшающий наследование View",
   "keywords": [
@@ -8,15 +8,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/yandex-ui/noscript-view-edefine.git"
+    "url": "git://github.com/yandex-ui/noscript-view-define.git"
   },
   "author": "Aleksei Androsov <doochik@ya.ru>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yandex-ui/noscript-view-edefine/issues"
+    "url": "https://github.com/yandex-ui/noscript-view-define/issues"
   },
-  "homepage": "https://github.com/yandex-ui/noscript-view-edefine",
-  "main": "dist/edefine.js",
+  "homepage": "https://github.com/yandex-ui/noscript-view-define",
+  "main": "dist/define.js",
   "devDependencies": {
     "babel": "6.5.2",
     "babel-cli": "6.11.4",

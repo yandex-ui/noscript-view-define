@@ -10,7 +10,7 @@ var params = {
     'devtool': undefined,
     'target': 'web',
     'entry': {
-        'edefine': './edefine.js'
+        'define': './define.js'
     },
     'context': srcPath,
     'output': {
