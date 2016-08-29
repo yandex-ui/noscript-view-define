@@ -1,6 +1,5 @@
 const clone = require('lodash/clone');
 const concat = require('lodash/concat');
-const reverse = require('lodash/reverse');
 const defaults = require('lodash/defaults');
 const get = require('lodash/get');
 const invoke = require('lodash/invoke');
@@ -8,12 +7,12 @@ const isFunction = require('lodash/isFunction');
 const isString = require('lodash/isString');
 const isUndefined = require('lodash/isUndefined');
 const last = require('lodash/last');
+const map = require('lodash/map');
 const mergeWith = require('lodash/mergeWith');
 const pick = require('lodash/pick');
+const reverse = require('lodash/reverse');
 const spread = require('lodash/spread');
 const wrap = require('lodash/wrap');
-const map = require('lodash/map');
-const thru = require('lodash/thru');
 
 const ns = require('ns');
 
@@ -187,7 +186,7 @@ function inheritInfo(classExtend, child, mixins) {
     info.unshift(child);
     info = map(info, mixin => pick(viewInfo(mixin), PATH_EXTENDS));
     info.push(customizer);
-    info = thru(info, spreadMergeWith);
+    info = spreadMergeWith(info);
     info = mergeWith(info, pick(parent, PATH_PARENT_EXTENDS), customizer);
     info = defaults(info, child);
 
