@@ -226,6 +226,14 @@
 	}
 
 	[ns.View, ns.ViewCollection].forEach(function (classExtend) {
+
+	    /**
+	     * Декларация вида
+	     * @param {string} id идентификатор вида
+	     * @param {Object} info параметры вида
+	     * @param {...string|Object} mixins набор миксинов, последним указывается предок
+	     * @returns {function} конструктор
+	     */
 	    classExtend.edefine = function (id, info) {
 	        for (var _len4 = arguments.length, mixins = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
 	            mixins[_key4 - 2] = arguments[_key4];
@@ -233,6 +241,18 @@
 
 	        ns.DEBUG && log('Определение вида %s: %o', id, mixins);
 	        return classExtend.define(id, inheritInfo(classExtend, info, mixins), _.last(mixins));
+	    };
+
+	    /**
+	     * Формирование объекта событий модели
+	     * @param {Object} events пользовательские события
+	     * @param {Object|boolean} [defaultDecl=false] значение событий по умолчанию
+	     * @returns {Object}
+	     */
+	    classExtend.edefineEvents = function (events) {
+	        var defaultDecl = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+	        return _.defaults({}, events, _.get(classExtend._formatModelsDecl({ test: defaultDecl }), 'test'));
 	    };
 	});
 

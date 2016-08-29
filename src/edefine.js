@@ -180,8 +180,26 @@ function inheritInfo(classExtend, child, mixins) {
 }
 
 [ ns.View, ns.ViewCollection ].forEach(function (classExtend) {
+
+    /**
+     * Декларация вида
+     * @param {string} id идентификатор вида
+     * @param {Object} info параметры вида
+     * @param {...string|Object} mixins набор миксинов, последним указывается предок
+     * @returns {function} конструктор
+     */
     classExtend.edefine = function (id, info, ...mixins) {
         ns.DEBUG && log('Определение вида %s: %o', id, mixins);
         return classExtend.define(id, inheritInfo(classExtend, info, mixins), _.last(mixins));
+    };
+
+    /**
+     * Формирование объекта событий модели
+     * @param {Object} events пользовательские события
+     * @param {Object|boolean} [defaultDecl=false] значение событий по умолчанию
+     * @returns {Object}
+     */
+    classExtend.edefineEvents = function (events, defaultDecl = false) {
+        return _.defaults({}, events, _.get(classExtend._formatModelsDecl({ test: defaultDecl }), 'test'));
     };
 });
