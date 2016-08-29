@@ -1,7 +1,7 @@
 # noscript-view-edefine
 
-[![Code Climate](https://codeclimate.com/github/yandex-ui/noscript-view-edefine/badges/gpa.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-edefine)
-[![Test Coverage](https://codeclimate.com/github/yandex-ui/noscript-view-edefine/badges/coverage.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-edefine/coverage)
+[![Code Climate](https://codeclimate.com/github/yandex-ui/noscript-view-define/badges/gpa.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-define)
+[![Test Coverage](https://codeclimate.com/github/yandex-ui/noscript-view-define/badges/coverage.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-define/coverage)
 
 Плагин для noscript, улучшающий наследование View.
 Доблавляет новые возможности:
