@@ -1,6 +1,9 @@
 var ns = require('ns');
 
 describe('ns-view-edefine', function() {
+    beforeEach(function() {
+        this.tested = ns.View.defineNg;
+    });
 
     describe('наследование событий', function() {
         it('ребенок должен отнаследовать события', function() {
@@ -12,7 +15,7 @@ describe('ns-view-edefine', function() {
                 events: { 'click .some-event2': 'method2' }
             });
 
-            ns.View.edefine('child-events-inherit1', {
+            this.tested('child-events-inherit1', {
                 events: { 'click .some-event3': 'method3' }
             }, 'mixin', 'base');
 
@@ -32,7 +35,7 @@ describe('ns-view-edefine', function() {
                 events: { 'click .some-event': spy1 }
             });
 
-            ns.View.edefine('child-events-inherit2', {
+            this.tested('child-events-inherit2', {
                 events: { 'click .some-event': spy2 }
             }, 'base');
 
@@ -57,7 +60,7 @@ describe('ns-view-edefine', function() {
                 events: { 'click .some-event': spy2 }
             });
 
-            ns.View.edefine('child-events-inherit3', {
+            this.tested('child-events-inherit3', {
                 events: { 'click .some-event': spy3 }
             }, 'mixin', 'base');
 
@@ -79,9 +82,9 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('sbase');
             ns.View.define('bmixin', { events: { 'ns-view-init': spy1 } });
-            ns.View.edefine('base', { events: { 'ns-view-init': spy2 } }, 'bmixin', 'sbase');
+            this.tested('base', { events: { 'ns-view-init': spy2 } }, 'bmixin', 'sbase');
             ns.View.define('mixin', { events: { 'ns-view-init': spy3 } });
-            ns.View.edefine('child-events-inherit4', { events: { 'ns-view-init': spy4 } }, 'mixin', 'base');
+            this.tested('child-events-inherit4', { events: { 'ns-view-init': spy4 } }, 'mixin', 'base');
 
             var view = ns.View.create('child-events-inherit4');
 
@@ -98,7 +101,7 @@ describe('ns-view-edefine', function() {
             var spy2 = this.sinon.spy();
 
             ns.View.define('base', { ctor: spy1 });
-            ns.View.edefine('child-ctor-inherit1', { ctor: spy2 }, 'base');
+            this.tested('child-ctor-inherit1', { ctor: spy2 }, 'base');
 
             var info = ns.View.info('child-ctor-inherit1');
             info.ctor();
@@ -115,7 +118,7 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('base', { ctor: spy1 });
             ns.View.define('mixin', { ctor: spy2 });
-            ns.View.edefine('child-ctor-inherit2', { ctor: spy3 }, 'mixin', 'base');
+            this.tested('child-ctor-inherit2', { ctor: spy3 }, 'mixin', 'base');
 
             var info = ns.View.info('child-ctor-inherit2');
             info.ctor();
@@ -135,9 +138,9 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('sbase');
             ns.View.define('bmixin', { ctor: spy1 });
-            ns.View.edefine('base', { ctor: spy2 }, 'bmixin', 'sbase');
+            this.tested('base', { ctor: spy2 }, 'bmixin', 'sbase');
             ns.View.define('mixin', { ctor: spy3 });
-            ns.View.edefine('child-ctor-inherit3', { ctor: spy4 }, 'mixin', 'base');
+            this.tested('child-ctor-inherit3', { ctor: spy4 }, 'mixin', 'base');
 
             var info = ns.View.info('child-ctor-inherit3');
             info.ctor();
@@ -159,9 +162,9 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('sbase');
             ns.View.define('bmixin', { ctor: spy1 });
-            ns.View.edefine('base', { ctor: spy2 }, 'bmixin', 'sbase');
+            this.tested('base', { ctor: spy2 }, 'bmixin', 'sbase');
             ns.View.define('mixin', { ctor: spy3 });
-            ns.View.edefine('child-ctor-inherit4', { ctor: spy4 }, 'mixin', 'base');
+            this.tested('child-ctor-inherit4', { ctor: spy4 }, 'mixin', 'base');
 
             var view = ns.View.create('child-ctor-inherit4');
 
@@ -176,9 +179,9 @@ describe('ns-view-edefine', function() {
         it('методы миксинов и потомка объединяются', function() {
             ns.View.define('sbase');
             ns.View.define('bmixin', { methods: { fn1: function() {} } });
-            ns.View.edefine('base', { methods: { fn2: function() {} } }, 'bmixin', 'sbase');
+            this.tested('base', { methods: { fn2: function() {} } }, 'bmixin', 'sbase');
             ns.View.define('mixin', { methods: { fn3: function() {} } });
-            ns.View.edefine('child-methods-inherit1', { methods: { fn4: function() {} } }, 'mixin', 'base');
+            this.tested('child-methods-inherit1', { methods: { fn4: function() {} } }, 'mixin', 'base');
 
             var view = ns.View.create('child-methods-inherit1');
 
@@ -193,7 +196,7 @@ describe('ns-view-edefine', function() {
             var spy3 = this.sinon.spy();
 
             ns.View.define('mixin', { methods: { fn: spy2 } });
-            ns.View.edefine('child-methods-inherit2', { mixins: [ 'mixin' ], methods: { fn: spy3 } });
+            this.tested('child-methods-inherit2', { mixins: [ 'mixin' ], methods: { fn: spy3 } });
 
             var view = ns.View.create('child-methods-inherit2');
             view.fn();
@@ -207,7 +210,7 @@ describe('ns-view-edefine', function() {
             var spy2 = this.sinon.spy();
 
             ns.View.define('base', { methods: { fn: spy1 } });
-            ns.View.edefine('child-methods-inherit3', { methods: { fn: spy2 } }, 'base');
+            this.tested('child-methods-inherit3', { methods: { fn: spy2 } }, 'base');
 
             var view = ns.View.create('child-methods-inherit3');
             view.fn();
@@ -222,7 +225,7 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('mixin1', { methods: { fn: spy1 } });
             ns.View.define('mixin2', { methods: { fn: spy2 } });
-            ns.View.edefine('child-methods-inherit4', { mixins: [ 'mixin1', 'mixin2' ] });
+            this.tested('child-methods-inherit4', { mixins: [ 'mixin1', 'mixin2' ] });
 
             var view = ns.View.create('child-methods-inherit4');
             view.fn();
@@ -250,7 +253,7 @@ describe('ns-view-edefine', function() {
                 models: { 'model2': false }
             });
 
-            ns.View.edefine('base', {
+            this.tested('base', {
                 models: { 'model3': true }
             }, 'bmixin', 'sbase');
 
@@ -258,7 +261,7 @@ describe('ns-view-edefine', function() {
                 models: { 'model4': true }
             });
 
-            ns.View.edefine('child-models-inherit', {
+            this.tested('child-models-inherit', {
                 models: { 'model5': false }
             }, 'mixin', 'base');
 
@@ -291,7 +294,7 @@ describe('ns-view-edefine', function() {
                 }
             });
 
-            ns.View.edefine('base', {
+            this.tested('base', {
                 models: {
                     model1: { 'ns-model-changed': spy3 }
                 }
@@ -303,7 +306,7 @@ describe('ns-view-edefine', function() {
                 }
             });
 
-            ns.View.edefine('child-models-inherit', {
+            this.tested('child-models-inherit', {
                 models: {
                     model1: { 'ns-model-changed': spy5 }
                 }
@@ -333,7 +336,7 @@ describe('ns-view-edefine', function() {
             });
 
             expect(function() {
-                ns.View.edefine('child-models-inherit', {
+                this.tested('child-models-inherit', {
                     models: {
                         model1: { 'ns-model-changed': false }
                     }
@@ -349,9 +352,9 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('sbase');
             ns.View.define('bmixin', { models: { 'model1': { 'custom_event': spy1 } } });
-            ns.View.edefine('base', { models: { 'model1': { 'custom_event': spy2 } } }, 'bmixin', 'sbase');
+            this.tested('base', { models: { 'model1': { 'custom_event': spy2 } } }, 'bmixin', 'sbase');
             ns.View.define('mixin', { models: { 'model1': { 'custom_event': spy3 } } });
-            ns.View.edefine('child-models-inherit4', { models: { 'model1': { 'custom_event': spy4 } } }, 'mixin', 'base');
+            this.tested('child-models-inherit4', { models: { 'model1': { 'custom_event': spy4 } } }, 'mixin', 'base');
 
             var view = ns.View.create('child-models-inherit4');
             view._show();
@@ -373,7 +376,7 @@ describe('ns-view-edefine', function() {
             ns.View.define('base');
             ns.View.define('mixin1', { ctor: spy1 });
             ns.View.define('mixin2', { ctor: spy2 });
-            ns.View.edefine('child-mixins-inherit1', {
+            this.tested('child-mixins-inherit1', {
                 mixins: [ 'mixin1' ],
                 ctor: spy3
             }, 'mixin2', 'base');
@@ -395,7 +398,7 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('mixin1', { ctor: spy1 });
             ns.View.define('mixin2', { ctor: spy2 });
-            ns.View.edefine('child-mixins-inherit2', {
+            this.tested('child-mixins-inherit2', {
                 mixins: [ 'mixin1', 'mixin2' ],
                 ctor: spy3
             });
@@ -417,7 +420,7 @@ describe('ns-view-edefine', function() {
 
             ns.View.define('mixin1', { ctor: spy1 });
             ns.View.define('mixin2', { ctor: spy2 });
-            ns.View.edefine('child-mixins-inherit2', {
+            this.tested('child-mixins-inherit2', {
                 ctor: spy3
             }, 'mixin1', 'mixin2', ns.View);
 
@@ -434,7 +437,10 @@ describe('ns-view-edefine', function() {
 });
 
 describe('ns-viewCollection-edefine', function() {
+
     beforeEach(function() {
+        this.tested = ns.ViewCollection.defineNg;
+
         ns.Model.define('modelCollection', {
             isCollection: true
         });
@@ -453,7 +459,7 @@ describe('ns-viewCollection-edefine', function() {
                 models: ['modelCollection']
             });
 
-            ns.ViewCollection.edefine('child-collection-events-inherit', {
+            this.tested('child-collection-events-inherit', {
                 events: {
                     'click .some-event2': 'method2'
                 },
@@ -499,7 +505,7 @@ describe('ns-viewCollection-edefine', function() {
         });
 
         it('должен наследоваться от нескольких видов', function() {
-            ns.ViewCollection.edefine('child-collection-events-inherit-many', {
+            this.tested('child-collection-events-inherit-many', {
                 split: {
                     byModel: 'modelCollection',
                     intoViews: 'aa'

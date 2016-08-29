@@ -1,4 +1,20 @@
-const _ = require('lodash');
+const clone = require('lodash/clone');
+const concat = require('lodash/concat');
+const reverse = require('lodash/reverse');
+const defaults = require('lodash/defaults');
+const get = require('lodash/get');
+const invoke = require('lodash/invoke');
+const isFunction = require('lodash/isFunction');
+const isString = require('lodash/isString');
+const isUndefined = require('lodash/isUndefined');
+const last = require('lodash/last');
+const mergeWith = require('lodash/mergeWith');
+const pick = require('lodash/pick');
+const spread = require('lodash/spread');
+const wrap = require('lodash/wrap');
+const map = require('lodash/map');
+const thru = require('lodash/thru');
+
 const ns = require('ns');
 
 /**
@@ -18,31 +34,31 @@ const PATH_PARENT_EXTENDS = [ 'ctor', 'events', 'models' ];
  * Объединение объектов, переданных в виде массива.
  * @type {function}
  */
-const spreadMergeWith = _.spread(_.mergeWith);
+const spreadMergeWith = spread(mergeWith);
 
 /**
  * Вывод предупреждения в консоль
  * @type {function}
  */
-const warn = _.wrap(_.invoke, function (invoke, ...args) {
+const warn = wrap(invoke, function (func, ...args) {
     const text = args.shift();
-    invoke(window, 'console.warn', '[ns.View.edefine] ' + text, ...args);
+    func(window, 'console.warn', '[ns.View.edefine] ' + text, ...args);
 });
 
 /**
  * Вывод лога в консоль
  * @type {function}
  */
-const log = _.wrap(_.invoke, function (invoke, ...args) {
+const log = wrap(invoke, function (func, ...args) {
     const text = args.shift();
-    invoke(window, 'console.log', '[ns.View.edefine] ' + text, ...args);
+    func(window, 'console.log', '[ns.View.edefine] ' + text, ...args);
 });
 
 function wrapperEvents(srcFunc, objFunc, ...args) {
-    const resultSrc = srcFunc && (_.isFunction(srcFunc) ? srcFunc.apply(this, args) : _.invoke(this, srcFunc, ...args));
-    const resultObj = objFunc && (_.isFunction(objFunc) ? objFunc.apply(this, args) : _.invoke(this, objFunc, ...args));
+    const resultSrc = srcFunc && (isFunction(srcFunc) ? srcFunc.apply(this, args) : invoke(this, srcFunc, ...args));
+    const resultObj = objFunc && (isFunction(objFunc) ? objFunc.apply(this, args) : invoke(this, objFunc, ...args));
 
-    if (ns.DEBUG && !(_.isUndefined(resultSrc) && _.isUndefined(resultObj))) {
+    if (ns.DEBUG && !(isUndefined(resultSrc) && isUndefined(resultObj))) {
         warn('Обработчик события не должен возвращать результат');
     }
 }
@@ -65,7 +81,7 @@ function eventsCustomizer(objValue, srcValue, key) {
         ns.assert.fail('ns.View.edefine', 'Попытка определить подписки с противоположными действиями. Событие: %s', key);
     }
 
-    return _.wrap(objValue, _.wrap(srcValue, wrapperEvents));
+    return wrap(objValue, wrap(srcValue, wrapperEvents));
 }
 
 /**
@@ -79,7 +95,7 @@ function groupEventsCustomizer(objValue, srcValue) {
         return srcValue;
     }
 
-    return _.mergeWith(objValue, srcValue, eventsCustomizer);
+    return mergeWith(objValue, srcValue, eventsCustomizer);
 }
 
 /**
@@ -111,7 +127,7 @@ function mergeCustomizer(objValue, srcValue, key) {
     }
 
     if (key === 'methods') {
-        return _.mergeWith(objValue, srcValue, methodsCustomizer);
+        return mergeWith(objValue, srcValue, methodsCustomizer);
     }
 
     if (key === 'events') {
@@ -119,7 +135,7 @@ function mergeCustomizer(objValue, srcValue, key) {
     }
 
     if (key === 'models') {
-        return _.mergeWith(
+        return mergeWith(
             this._formatModelsDecl(objValue),
             this._formatModelsDecl(srcValue),
             groupEventsCustomizer
@@ -140,7 +156,7 @@ function mergeCustomizer(objValue, srcValue, key) {
  * @returns {Object}
  */
 function viewInfo(info) {
-    return _.isString(info) && ns.View.info(info) || info;
+    return isString(info) && ns.View.info(info) || info;
 }
 
 /**
@@ -150,7 +166,7 @@ function viewInfo(info) {
  * @returns {boolean}
  */
 function checkIgnoreMerge(objValue, srcValue) {
-    return _.isUndefined(objValue) || objValue === srcValue;
+    return isUndefined(objValue) || objValue === srcValue;
 }
 
 /**
@@ -161,22 +177,21 @@ function checkIgnoreMerge(objValue, srcValue) {
  * @returns {Object} Модифицированный объект-информация
  */
 function inheritInfo(classExtend, child, mixins) {
-    mixins = _.clone(mixins);
+    mixins = clone(mixins);
     const parent = viewInfo(mixins.pop());
     const customizer = mergeCustomizer.bind(classExtend);
 
-    return _(child)
-        .chain()
-        .get('mixins', [])
-        .concat(mixins)
-        .reverse()
-        .unshift(child)
-        .map(mixin => _.pick(viewInfo(mixin), PATH_EXTENDS))
-        .push(customizer)
-        .thru(spreadMergeWith)
-        .mergeWith(_.pick(parent, PATH_PARENT_EXTENDS), customizer)
-        .defaults(child)
-        .value();
+    let info = get(child, 'mixins', []);
+    info = concat(info, mixins);
+    info = reverse(info);
+    info.unshift(child);
+    info = map(info, mixin => pick(viewInfo(mixin), PATH_EXTENDS));
+    info.push(customizer);
+    info = thru(info, spreadMergeWith);
+    info = mergeWith(info, pick(parent, PATH_PARENT_EXTENDS), customizer);
+    info = defaults(info, child);
+
+    return info;
 }
 
 [ ns.View, ns.ViewCollection ].forEach(function (classExtend) {
@@ -188,9 +203,9 @@ function inheritInfo(classExtend, child, mixins) {
      * @param {...string|Object} mixins набор миксинов, последним указывается предок
      * @returns {function} конструктор
      */
-    classExtend.edefine = function (id, info, ...mixins) {
-        ns.DEBUG && log('Определение вида %s: %o', id, mixins);
-        return classExtend.define(id, inheritInfo(classExtend, info, mixins), _.last(mixins));
+    classExtend.defineNg = function (id, info, ...mixins) {
+        ns.DEBUG && log('Определение вида %s, mixins: %o, %o', id, mixins, get(info, 'mixins', []));
+        return classExtend.define(id, inheritInfo(classExtend, info, mixins), last(mixins));
     };
 
     /**
@@ -199,7 +214,7 @@ function inheritInfo(classExtend, child, mixins) {
      * @param {Object|boolean} [defaultDecl=false] значение событий по умолчанию
      * @returns {Object}
      */
-    classExtend.edefineModelEvents = function (events, defaultDecl = false) {
-        return _.defaults({}, events, _.get(classExtend._formatModelsDecl({ test: defaultDecl }), 'test'));
+    classExtend.defineModelEvents = function (events, defaultDecl = false) {
+        return defaults({}, events, get(classExtend._formatModelsDecl({ test: defaultDecl }), 'test'));
     };
 });

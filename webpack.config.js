@@ -18,8 +18,7 @@ var params = {
         'path': distPath
     },
     'externals': {
-        'ns': 'ns',
-        'lodash': '_'
+        'ns': 'ns'
     },
     'module': {
         'preLoaders': [

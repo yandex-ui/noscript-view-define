@@ -17,7 +17,6 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'node_modules/jquery/dist/jquery.min.js',
-      'node_modules/lodash/lodash.min.js',
       'node_modules/noscript/dist/noscript.js',
       'test/stub/*.js',
       'test/spec/*.js',
@@ -38,8 +37,7 @@ module.exports = function(config) {
     webpack: {
         'devtool': '#inline-source-map',
         'externals': {
-            'ns': 'ns',
-            'lodash': '_'
+            'ns': 'ns'
         },
         'module': {
             'loaders': [
