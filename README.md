@@ -1,7 +1,6 @@
 # noscript-view-edefine
 
-[![Code Climate](https://codeclimate.com/github/yandex-ui/noscript-view-define/badges/gpa.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-define)
-[![Test Coverage](https://codeclimate.com/github/yandex-ui/noscript-view-define/badges/coverage.svg)](https://codeclimate.com/github/yandex-ui/noscript-view-define/coverage)
+[![Build Status][build]][build-link] [![NPM version][version]][version-link] [![Dependency Status][dependency]][dependency-link] [![devDependency Status][dev-dependency]][dev-dependency-link] [![Code Climate][climate]][climate-link] [![Test Coverage][coverage]][coverage-link] [![Inline docs][inch]][inch-link]
 
 Плагин для noscript, улучшающий наследование View.
 Доблавляет новые возможности:
@@ -112,3 +111,18 @@ callback-child
 
 Вначале вызываются колбеки миксинов, объявленных в свойстве `mixins`, а потом миксины в аргументах.
 Вызов выполняется в порядке перечисления.
+
+[build]: https://travis-ci.org/yandex-ui/noscript-view-define.svg?branch=master
+[build-link]: https://travis-ci.org/yandex-ui/noscript-view-define
+[version]: https://badge.fury.io/js/noscript-view-define.svg
+[version-link]: http://badge.fury.io/js/noscript-view-define
+[dependency]: https://david-dm.org/yandex-ui/noscript-view-define.svg
+[dependency-link]: https://david-dm.org/yandex-ui/noscript-view-define
+[dev-dependency]: https://david-dm.org/yandex-ui/noscript-view-define/dev-status.svg
+[dev-dependency-link]: https://david-dm.org/yandex-ui/noscript-view-define#info=devDependencies
+[climate]: https://codeclimate.com/github/yandex-ui/noscript-view-define/badges/gpa.svg
+[climate-link]: https://codeclimate.com/github/yandex-ui/noscript-view-define
+[coverage]: https://codeclimate.com/github/yandex-ui/noscript-view-define/badges/coverage.svg
+[coverage-link]: https://codeclimate.com/github/yandex-ui/noscript-view-define
+[inch]: https://inch-ci.org/github/yandex-ui/noscript-view-define.svg?branch=master
+[inch-link]: https://inch-ci.org/github/yandex-ui/noscript-view-define

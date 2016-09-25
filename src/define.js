@@ -1,3 +1,4 @@
+/* @ifdef LODASH */
 const clone = require('lodash/clone');
 const concat = require('lodash/concat');
 const defaults = require('lodash/defaults');
@@ -13,6 +14,26 @@ const pick = require('lodash/pick');
 const reverse = require('lodash/reverse');
 const spread = require('lodash/spread');
 const wrap = require('lodash/wrap');
+/* @endif */
+/* @ifdef NOLODASH **
+const {
+    clone,
+    concat,
+    defaults,
+    get,
+    invoke,
+    isFunction,
+    isString,
+    isUndefined,
+    last,
+    map,
+    mergeWith,
+    pick,
+    reverse,
+    spread,
+    wrap
+} = require('lodash');
+/* @endif */
 
 const ns = require('ns');
 

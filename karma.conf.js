@@ -16,6 +16,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/lodash/lodash.min.js',
       'node_modules/jquery/dist/jquery.min.js',
       'node_modules/noscript/dist/noscript.js',
       'test/stub/*.js',
@@ -43,7 +44,7 @@ module.exports = function(config) {
             'loaders': [
                 {
                     'test': /\.js$/,
-                    'loader': 'babel',
+                    'loader': 'babel!preprocess?+NOLODASH',
                     'include': [
                         path.join(__dirname, 'src'),
                         path.join(__dirname, 'test')
