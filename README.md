@@ -55,7 +55,7 @@ ns.View.define('mixin2', {
     }
 });
 
-ns.View.edefine('child', {
+ns.View.defineNg('child', {
     mixins: [ 'mixin1' ],
     events: {
         'event': 'callback-child'
