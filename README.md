@@ -1,4 +1,4 @@
-# noscript-view-edefine
+# noscript-view-defineNg
 
 [![Dependency Status][dependency]][dependency-link] [![devDependency Status][dev-dependency]][dev-dependency-link] [![Code Climate][climate]][climate-link] [![Test Coverage][coverage]][coverage-link] [![Inline docs][inch]][inch-link]
 
@@ -12,13 +12,13 @@
 
 ## Множественное наследование
 ```js
-ns.View.edefine('my-child', {
+ns.View.defineNg('my-child', {
 }, 'myMixinView1', 'myMixinView2', 'myParentView');
 ```
 
 Либо указание миксинов в свойстве `mixins`.
 ```js
-ns.View.edefine('my-child', {
+ns.View.defineNg('my-child', {
     mixins: [ 'myMixinView1' ]
 }, 'myMixinView2', 'myParentView');
 ```
@@ -87,7 +87,7 @@ ns.View.define('mixin', {
     }
 });
 
-ns.View.edefine('child', {
+ns.View.defineNg('child', {
     models: {
         model: { 'ns-model-changed': false }
     },
